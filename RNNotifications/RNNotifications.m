@@ -492,4 +492,31 @@ RCT_EXPORT_METHOD(localNotification:(NSDictionary *)notification)
     }
 }
 
+
+RCT_EXPORT_METHOD(cancelAllLocalNotifications)
+{
+  [RCTSharedApplication() cancelAllLocalNotifications];
+}
+
+RCT_EXPORT_METHOD(cancelLocalNotifications:(NSDictionary<NSString *, id> *)userInfo)
+{
+  for (UILocalNotification *notification in [UIApplication sharedApplication].scheduledLocalNotifications) {
+    __block BOOL matchesAll = YES;
+    NSDictionary<NSString *, id> *notificationInfo = notification.userInfo;
+    // Note: we do this with a loop instead of just `isEqualToDictionary:`
+    // because we only require that all specified userInfo values match the
+    // notificationInfo values - notificationInfo may contain additional values
+    // which we don't care about.
+    [userInfo enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+      if (![notificationInfo[key] isEqual:obj]) {
+        matchesAll = NO;
+        *stop = YES;
+      }
+    }];
+    if (matchesAll) {
+      [[UIApplication sharedApplication] cancelLocalNotification:notification];
+    }
+  }
+}
+
 @end

@@ -181,4 +181,12 @@ export default class NotificationsIOS {
   static localNotification(notification: Object) {
     NativeRNNotifications.localNotification(notification);
   }
+
+  static cancelLocalNotifications(userInfo: Object) {
+    NativeRNNotifications.cancelLocalNotifications(userInfo);
+  }
+
+  static cancelAllLocalNotifications() {
+    NativeRNNotifications.cancelAllLocalNotifications();
+  }
 }
